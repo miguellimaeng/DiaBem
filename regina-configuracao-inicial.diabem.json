@@ -1,0 +1,65 @@
+{
+  "format": "diabem-setup",
+  "version": 1,
+  "createdAt": "2026-11-06",
+  "createdBy": "Filho (a partir do pacote de 06/11/2026 — transcrições de conversas, sem documentos originais)",
+  "profile": {
+    "name": "Regina",
+    "diabetesType": "type2",
+    "managedBy": "self",
+    "historyNotes": [
+      { "id": "h-ins", "title": "Esquema de insulina relatado", "when": "28/10/2026", "evidence": "pending", "source": "Conversa com menção a foto de receita não disponível",
+        "text": "NPH U-100: 12 UI antes do café, 12 UI antes do almoço, 10 UI ao deitar. Regular U-100: 8 UI antes do café, 8 UI antes do almoço, 2 UI antes do jantar. Confirmar concentração, horários, nome comercial, prescritor, data, adesão e técnica com a receita original." },
+      { "id": "h-g2023", "title": "Glicemia de 264 mg/dL", "when": "2023", "evidence": "reported", "source": "Relato retrospectivo; laudo ausente",
+        "text": "Valor citado retrospectivamente, sem data exata nem laudo." },
+      { "id": "h-gout", "title": "Glicemias de outubro", "when": "Outubro/2026", "evidence": "reported", "source": "Mensagens e resumos; registros originais não recuperados",
+        "text": "Manhã/jejum frequentemente entre 150 e 174 mg/dL; amplitude mencionada de 119 a 271 mg/dL. Uma média de 156 mg/dL foi citada para um subconjunto de leituras de jejum, sem amostra para conferir." },
+      { "id": "h-g2810", "title": "Leituras de 28/10", "when": "28/10/2026", "evidence": "reported", "source": "Mensagem",
+        "text": "290 mg/dL após o almoço. Também citado 271 mg/dL nesse dia, com contexto e horário não confirmados." },
+      { "id": "h-olho", "title": "Visão", "when": "Outubro/2026", "evidence": "reported", "source": "Relato familiar",
+        "text": "Dificuldade para enxergar de perto e indicação médica de injeções no olho. Diagnóstico, medicamento, olho tratado e plano de aplicações não confirmados." },
+      { "id": "h-pend", "title": "Documentos a reunir", "evidence": "pending",
+        "text": "Laudo do laboratório de 14/06/2025; foto da receita de insulina atual; caderno ou aparelho com as glicemias de outubro; laudo da oftalmologia (OCT/retinografia) e nome das injeções; HbA1c após 2025; peso, altura, pressão, outros medicamentos e alergias." }
+    ]
+  },
+  "settings": {
+    "mode": "easy",
+    "fontSize": "lg",
+    "glucoseUnit": "mg/dL"
+  },
+  "insulinPlan": [
+    { "kind": "basal", "name": "NPH", "concentration": "U-100", "moment": "before_breakfast", "doseUnits": 12, "confirmed": false, "note": "Relatado em 28/10/2026; conferir na receita" },
+    { "kind": "basal", "name": "NPH", "concentration": "U-100", "moment": "before_lunch", "doseUnits": 12, "confirmed": false, "note": "Relatado em 28/10/2026; conferir na receita" },
+    { "kind": "basal", "name": "NPH", "concentration": "U-100", "moment": "bedtime", "doseUnits": 10, "confirmed": false, "note": "Relatado em 28/10/2026; conferir na receita" },
+    { "kind": "bolus", "name": "Regular", "concentration": "U-100", "moment": "before_breakfast", "doseUnits": 8, "confirmed": false, "note": "Relatado em 28/10/2026; conferir na receita" },
+    { "kind": "bolus", "name": "Regular", "concentration": "U-100", "moment": "before_lunch", "doseUnits": 8, "confirmed": false, "note": "Relatado em 28/10/2026; conferir na receita" },
+    { "kind": "bolus", "name": "Regular", "concentration": "U-100", "moment": "before_dinner", "doseUnits": 2, "confirmed": false, "note": "Relatado em 28/10/2026; conferir na receita" }
+  ],
+  "examResults": [
+    { "indicator": "fasting_glucose", "value": 87, "unit": "mg/dL", "date": "2025-06-14", "verified": false, "note": "Transcrição de conversa" },
+    { "indicator": "hba1c", "value": 8.5, "unit": "%", "date": "2025-06-14", "verified": false, "note": "Transcrição de conversa" },
+    { "indicator": "creatinine", "value": 0.98, "unit": "mg/dL", "date": "2025-06-14", "verified": false, "note": "Transcrição de conversa" },
+    { "indicator": "egfr", "value": 62, "unit": "mL/min/1,73 m²", "date": "2025-06-14", "verified": false, "note": "Transcrição de conversa" },
+    { "indicator": "sodium", "value": 141, "unit": "mEq/L", "date": "2025-06-14", "verified": false, "note": "Transcrição de conversa" },
+    { "indicator": "potassium", "value": 4.3, "unit": "mEq/L", "date": "2025-06-14", "verified": false, "note": "Transcrição de conversa" }
+  ],
+  "questions": [
+    { "text": "Endócrino: quais metas de glicemia de jejum, após as refeições e de HbA1c são adequadas para mim?" },
+    { "text": "Endócrino: o esquema e os horários da NPH e da Regular continuam corretos?" },
+    { "text": "Endócrino: como devo registrar e o que fazer em caso de hipoglicemia?" },
+    { "text": "Endócrino: o que fazer quando a glicemia ficar perto ou acima de 300 mg/dL?" },
+    { "text": "Endócrino: devo fazer monitorização estruturada ou usar sensor (CGM)?" },
+    { "text": "Endócrino: quais exames renais e do coração devo repetir (HbA1c, creatinina/eTFG, albumina na urina, colesterol)?" },
+    { "text": "Oftalmo: qual é o diagnóstico da retina? Há retinopatia diabética ou edema macular?" },
+    { "text": "Oftalmo: qual medicamento é injetado, com que frequência, qual o benefício esperado e quais as alternativas?" },
+    { "text": "Oftalmo: quais sinais de alerta nos olhos devo observar? Há OCT ou retinografia para guardar?" }
+  ],
+  "emergency": {
+    "showName": true,
+    "name": "Regina",
+    "diabetesType": "type2",
+    "importantMeds": "Usa insulina NPH e Regular (doses conforme a receita).",
+    "notes": "Tem dificuldade para enxergar de perto.",
+    "contacts": []
+  }
+}
