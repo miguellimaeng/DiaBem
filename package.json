@@ -1,17 +1,19 @@
 {
   "name": "diabem",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.6.0",
   "type": "module",
   "description": "DiaBem — companheiro diário para organização, educação e acompanhamento do diabetes (PWA).",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "build:fast": "vite build",
+    "build": "vite build",
+    "build:check": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "6.2.108",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

@@ -26,6 +26,24 @@ Progressive Web App (PWA): abre por URL, funciona offline e instala na tela inic
 | **Perfil** | Modo Adulto/Criança/Fácil, tamanho do texto, reduzir animações, unidade, faixa, lembretes, instalar app, exportar tudo (JSON com arquivos), carregar/remover demo, apagar tudo |
 | **PWA** | Manifest, ícones (inclui maskable), atalhos “Registrar glicose” e “Emergência”, service worker com cache do app (testado: recarrega offline) |
 
+### Novidades da versão 0.6
+- **Capa e ícone acompanham a cor escolhida**: cada tema tem seu ícone — Oceano (gota com pulso), Aurora (gota com sol nascendo), Pôr do sol (gota com coração), Neutro claro e Clássico (versões da gota com pulso). Mudam juntos a capa, a abertura, o ícone do cabeçalho, o favicon e o ícone/manifesto usados na instalação (`public/manifest-<tema>.webmanifest`, `public/icons/themes/`).
+- Limitação dos celulares: o ícone na tela de início é gravado no momento da instalação. Trocando de cor depois, o app muda por dentro; para o ícone da tela de início mudar, remova o atalho e instale de novo.
+
+### Novidades da versão 0.5
+- **Capa do app**: tela de boas-vindas com a marca, o ícone e cartões flutuantes, nas cores do tema escolhido. Aparece no primeiro acesso (com "Começar" e "Tenho um arquivo de configuração") e, de forma rápida, ao abrir o app uma vez por sessão (toque para pular; sem animação com "Reduzir animações").
+- **Novo ícone** (gota com pulso): quadrado cheio, sem cantos transparentes — fica certo no iPhone (que arredonda sozinho) e no Android (versão *maskable*). Outras opções desenhadas em `public/icons/opcoes/` (A, B, C, D). Para trocar: copie a opção para `public/icons/icon.svg` e gere os PNGs (192, 512, maskable 512 e apple-touch 180).
+
+### Novidades da versão 0.4
+- **Cores do app à escolha da pessoa** (no primeiro acesso e em Perfil → Cores do app): Oceano (padrão), Aurora, Pôr do sol, Neutro claro e Clássico. Os três vibrantes têm fundo em degradê e destaques em degradê; o Neutro claro é o mais legível para baixa visão. A escolha vale para qualquer modo (Adulto, Criança, Fácil) e o Modo Fácil reforça o contraste em todos os temas.
+- Os temas ficam em `src/styles/themes.css` e `src/config/themes.ts`: para criar outro, copie um bloco e troque as cores.
+
+### Novidades da versão 0.3
+- **Peso e medidas** (Saúde → Peso e medidas): data de nascimento (idade calculada), altura e registro de peso ao longo do tempo, com gráfico, variação em 30 e 90 dias e IMC (apenas o número, com aviso de que a interpretação depende da idade e é feita pela equipe). Peso também entra no botão Registrar, no Meu Dia e no relatório. No modo Criança o IMC não é exibido (avaliação por curvas de crescimento).
+- **Leitura automática de laudo em PDF** (Saúde → Exames → Ler laudo em PDF): o texto do PDF é lido no próprio aparelho com pdf.js — nada é enviado para a internet. O app encontra HbA1c, glicemia de jejum, colesterol total, HDL, LDL, triglicerídeos, creatinina, eTFG, microalbuminúria, sódio, potássio, TSH, ácido úrico e ureia, além da data da coleta, e mostra tudo numa tela de conferência: a pessoa corrige ou desmarca antes de salvar. Se o valor já existia (por exemplo, transcrito de conversa), o app mostra se **confere** ou é **diferente**, e marca como conferido quando bate.
+  - Limitação: fotos e PDFs escaneados (imagem) ainda não são lidos — isso exige OCR, previsto para uma próxima versão. Nesses casos o arquivo é guardado e os valores são digitados.
+- **PDF para levar ao médico** (Saúde → Relatórios): gera um PDF de verdade no celular, com dados gerais (idade, altura, peso, IMC), glicose (números, gráfico, médias por momento), esquema de insulina com itens a confirmar, medicamentos, peso, alimentação, atividade, sintomas, exames (conferidos ou transcritos), histórico informado e perguntas. Botões **Baixar PDF** e **Enviar PDF** (WhatsApp, e-mail…), além de Imprimir e Planilha CSV.
+
 ### Novidades da versão 0.2
 - **Importar arquivo** (no primeiro acesso ou em Perfil): arquivo de configuração `diabem-setup` preparado por um familiar ou profissional, ou backup completo exportado pelo app. Nada existente é apagado.
 - **Esquema de insulina da receita** (Saúde → Medicamentos): transcrição por momento do dia, com selo “Conferido na receita” ou “Confirmar na receita”. No registro de insulina, a pessoa toca na aplicação da receita e confirma a dose aplicada. O app continua sem calcular, sugerir ou ajustar doses.
