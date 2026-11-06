@@ -41,12 +41,17 @@ export type ExperienceMode = 'adult' | 'child' | 'easy';
 export type DiabetesType = 'type1' | 'type2' | 'lada' | 'gestational' | 'other' | 'unspecified';
 export type GlucoseUnit = 'mg/dL' | 'mmol/L';
 export type FontSize = 'md' | 'lg' | 'xl';
+export type ThemeName = 'oceano' | 'aurora' | 'por-do-sol' | 'neutro' | 'classico';
 
 export interface UserProfile {
   id: 'me';
   name: string;
   diabetesType: DiabetesType;
   birthYear?: number;
+  /** Data de nascimento (AAAA-MM-DD) — usada para calcular a idade. */
+  birthDate?: ISODate;
+  /** Altura em centímetros. */
+  heightCm?: number;
   /** Quem usa o app: a própria pessoa ou um cuidador gerenciando o perfil. */
   managedBy: 'self' | 'caregiver';
   /** Histórico informado (ex.: resumo trazido pela família). Nunca tratado como laudo. */
@@ -92,6 +97,8 @@ export interface AppSettings {
   id: 'settings';
   mode: ExperienceMode;
   fontSize: FontSize;
+  /** Tema de cores escolhido pela pessoa. */
+  theme: ThemeName;
   reduceMotion: boolean;
   glucoseUnit: GlucoseUnit;
   targetRange: GlucoseTargetRange | null;
@@ -215,6 +222,11 @@ export type MoodLevel = 'great' | 'good' | 'ok' | 'tired' | 'stressed' | 'bad' |
 export interface MoodRecord extends TimedRecord {
   mood: MoodLevel;
   symptoms: string[];
+}
+
+/** Peso registrado ao longo do tempo. */
+export interface WeightRecord extends TimedRecord {
+  weightKg: number;
 }
 
 /** Eventos livres da linha do tempo (sono, anotação, etc.). */
@@ -380,7 +392,7 @@ export interface EmergencyProfile {
 
 /* ---------- Cuidador (arquitetura futura) ---------- */
 
-export type ShareCategory = 'glucose' | 'meals' | 'insulin' | 'medications' | 'activity' | 'mood' | 'exams' | 'appointments' | 'emergency';
+export type ShareCategory = 'glucose' | 'weight' | 'meals' | 'insulin' | 'medications' | 'activity' | 'mood' | 'exams' | 'appointments' | 'emergency';
 
 /** Compartilhamento sempre explícito, por categoria e com validade. Nada é compartilhado por padrão. */
 export interface CaregiverPermission extends BaseRecord {
@@ -397,4 +409,4 @@ export interface CaregiverPermission extends BaseRecord {
 export type Tone = 'blue' | 'green' | 'teal' | 'amber' | 'rose' | 'violet' | 'gray';
 
 /** Tipos de registro que o usuário pode criar pela folha "Registrar". */
-export type QuickKind = 'glucose' | 'meal' | 'insulin' | 'medication' | 'activity' | 'mood' | 'event';
+export type QuickKind = 'glucose' | 'meal' | 'insulin' | 'medication' | 'activity' | 'mood' | 'weight' | 'event';

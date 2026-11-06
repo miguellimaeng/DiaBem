@@ -29,6 +29,9 @@ export function TrendLine({ points, unit, color = 'var(--violet)' }: { points: {
   const pad = (max - min) * 0.2 || Math.abs(max) * 0.1 || 1;
   const y = (v: number) => P / 2 + (1 - (v - (min - pad)) / (max - min + 2 * pad)) * (H - P - 8);
   const x = (i: number) => P + (sorted.length === 1 ? (W - 2 * P) / 2 : (i / (sorted.length - 1)) * (W - 2 * P));
+  // no máximo ~5 rótulos de data para não sobrepor
+  const step = Math.max(1, Math.ceil(sorted.length / 5));
+  const showLabel = (i: number) => i === sorted.length - 1 || (i % step === 0 && sorted.length - 1 - i >= step / 2);
   const d = sorted.map((p, i) => `${i ? 'L' : 'M'}${x(i)},${y(p.value)}`).join(' ');
   return (
     <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Evolução com ${sorted.length} valores registrados (${unit}).`} style={{ width: '100%', height: 'auto', display: 'block' }}>
@@ -37,7 +40,7 @@ export function TrendLine({ points, unit, color = 'var(--violet)' }: { points: {
         <g key={i}>
           <circle cx={x(i)} cy={y(p.value)} r="4" fill="#fff" stroke={color} strokeWidth="2.4" />
           <text x={x(i)} y={y(p.value) - 9} textAnchor="middle" fontSize="10" fontWeight="700" fill="#405066">{String(p.value).replace('.', ',')}</text>
-          <text x={x(i)} y={H - 2} textAnchor="middle" fontSize="9" fill="#8a97a8">{fmtDateShort(p.date + 'T12:00:00')}</text>
+          {showLabel(i) && <text x={x(i)} y={H - 2} textAnchor={sorted.length > 1 && i === 0 ? 'start' : sorted.length > 1 && i === sorted.length - 1 ? 'end' : 'middle'} fontSize="9" fill="#8a97a8">{fmtDateShort(p.date + 'T12:00:00')}</text>}
         </g>
       ))}
     </svg>

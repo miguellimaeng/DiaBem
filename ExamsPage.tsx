@@ -14,6 +14,7 @@ import { bytes } from '@/utils/format';
 import { compressImage } from '@/utils/image';
 import { unlock } from '../education/achievements';
 import type { Exam, ExamAttachment, ExamIndicator, ExamResult } from '@/types/models';
+import { LabReaderSheet } from './LabReaderSheet';
 
 const MAX_FILE = 15 * 1024 * 1024;
 
@@ -21,6 +22,7 @@ export function ExamsPage() {
   const [tab, setTab] = useState<'files' | 'indicators'>('files');
   const [examSheet, setExamSheet] = useState<{ id?: string } | null>(null);
   const [resultSheet, setResultSheet] = useState<{ id?: string; indicator?: ExamIndicator } | null>(null);
+  const [reading, setReading] = useState<ExamAttachment | null>(null);
   const route = useRoute();
   useEffect(() => { if (route.query.get('novo')) setExamSheet({}); }, [route.query]);
 
@@ -28,6 +30,18 @@ export function ExamsPage() {
     <div>
       <SubHead title="Exames" subtitle="Guarde laudos e acompanhe indicadores" onBack={() => back('/saude')}
         action={<Button small icon="plus" onClick={() => (tab === 'files' ? setExamSheet({}) : setResultSheet({}))}>Adicionar</Button>} />
+      <label className="card clickable tight mb-3" style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}>
+        <span className="cat lg tone-blue"><Icon name="scan" size={24} /></span>
+        <div className="grow">
+          <div className="strong">Ler laudo em PDF</div>
+          <div className="xsmall muted">Escolha o PDF do laboratório: o app encontra os valores e você confere antes de salvar.</div>
+        </div>
+        <Icon name="chevronRight" />
+        <input type="file" accept="application/pdf" style={{ display: 'none' }} onChange={(e) => {
+          const f = e.target.files?.[0]; e.target.value = '';
+          if (f) setReading({ name: f.name, type: f.type || 'application/pdf', size: f.size, blob: f });
+        }} />
+      </label>
       <Segmented label="Seção" value={tab} onChange={setTab} options={[{ value: 'files', label: 'Laudos e arquivos' }, { value: 'indicators', label: 'Indicadores' }]} />
       <div className="mt-3">
         {tab === 'files' ? <ExamList onOpen={(id) => setExamSheet({ id })} onAdd={() => setExamSheet({})} />
@@ -35,6 +49,7 @@ export function ExamsPage() {
       </div>
       <div className="mt-4"><Notice tone="neutral">O DiaBem guarda e organiza seus exames, mas não interpreta resultados. A avaliação é feita pela sua equipe de saúde.</Notice></div>
       {examSheet && <ExamForm id={examSheet.id} onDone={() => setExamSheet(null)} />}
+      {reading && <LabReaderSheet file={reading} onDone={(n) => { setReading(null); if (n) setTab('indicators'); }} />}
       {resultSheet && <ResultForm id={resultSheet.id} indicator={resultSheet.indicator} onDone={() => setResultSheet(null)} />}
     </div>
   );
@@ -72,6 +87,7 @@ function ExamForm({ id, onDone }: { id?: string; onDone: () => void }) {
   const [note, setNote] = useState('');
   const [files, setFiles] = useState<ExamAttachment[]>([]);
   const [error, setError] = useState('');
+  const [reading, setReading] = useState<ExamAttachment | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -121,6 +137,7 @@ function ExamForm({ id, onDone }: { id?: string; onDone: () => void }) {
             <button className="grow list-btn" onClick={() => openFile(f)} style={{ minWidth: 0 }}>
               <div className="small strong truncate">{f.name}</div><div className="xsmall muted">{bytes(f.size)} · toque para abrir</div>
             </button>
+            {id && f.type === 'application/pdf' && <button className="btn btn-sm btn-soft" onClick={() => setReading(f)}>Ler valores</button>}
             <button className="icon-btn ghost" aria-label={`Remover ${f.name}`} onClick={() => setFiles(files.filter((_, j) => j !== i))}><Icon name="trash" size={18} /></button>
           </div>
         ))}
@@ -138,6 +155,8 @@ function ExamForm({ id, onDone }: { id?: string; onDone: () => void }) {
         <span className="hint">Os arquivos ficam guardados só neste aparelho.</span>
       </div>
       <TextField label="Observações (opcional)" value={note} onChange={setNote} multiline />
+      {!id && files.some((f) => f.type === 'application/pdf') && <p className="xsmall muted">Depois de salvar, abra o exame e toque em “Ler valores” para preencher os indicadores a partir do PDF.</p>}
+      {reading && id && <LabReaderSheet file={reading} examId={id} onDone={() => setReading(null)} />}
     </RecordSheet>
   );
 }

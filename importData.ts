@@ -22,8 +22,8 @@ export interface SetupFile {
   version: 1;
   createdAt?: string;
   createdBy?: string;
-  profile?: Partial<Pick<UserProfile, 'name' | 'diabetesType' | 'birthYear' | 'managedBy' | 'historyNotes'>>;
-  settings?: Partial<Pick<AppSettings, 'mode' | 'fontSize' | 'glucoseUnit' | 'reduceMotion' | 'targetRange'>>;
+  profile?: Partial<Pick<UserProfile, 'name' | 'diabetesType' | 'birthYear' | 'birthDate' | 'heightCm' | 'managedBy' | 'historyNotes'>>;
+  settings?: Partial<Pick<AppSettings, 'mode' | 'fontSize' | 'theme' | 'glucoseUnit' | 'reduceMotion' | 'targetRange'>>;
   insulinPlan?: Partial2<InsulinPlanItem>[];
   medications?: Partial2<Medication>[];
   examResults?: Partial2<ExamResult>[];

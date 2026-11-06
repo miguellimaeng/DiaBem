@@ -9,7 +9,7 @@ import { uid } from '@/utils/id';
 import { addDays, nowISO, startOfDay, toLocalDateInput } from '@/utils/date';
 import type {
   ActivityRecord, Appointment, ConsultationQuestion, DayEvent, Exam, ExamResult, GlucoseContext, GlucoseRecord,
-  InsulinRecord, MealRecord, Medication, MedicationRecord, MoodRecord,
+  InsulinRecord, MealRecord, Medication, MedicationRecord, MoodRecord, WeightRecord,
 } from '@/types/models';
 
 function rng(seed: number) {
@@ -36,6 +36,7 @@ export async function loadDemoData() {
   const moods: MoodRecord[] = [];
   const events: DayEvent[] = [];
   const medRecs: MedicationRecord[] = [];
+  const weights: WeightRecord[] = [];
 
   const med: Medication = { ...base(), id: 'demo-med-1', name: 'Medicamento de exemplo', dose: '1 comprimido', times: ['08:00', '20:00'], frequency: 'twice_daily', active: true, important: true, reminder: false, note: 'Item de demonstração' };
 
@@ -86,6 +87,7 @@ export async function loadDemoData() {
       const iso = at(day, 21, 0);
       if (new Date(iso).getTime() < nowMs) moods.push({ ...base(), id: uid('demo-mo-'), at: iso, mood: (['great', 'good', 'ok', 'tired'] as const)[Math.floor(r() * 4)], symptoms: r() < 0.2 ? ['Cansaço'] : [] });
     }
+    if (i % 7 === 0) weights.push({ ...base(), id: uid('demo-w-'), at: at(day, 7, 10), weightKg: Math.round((72.4 - (44 - i) * 0.03 + (r() - 0.5) * 0.6) * 10) / 10 });
     const sIso = at(day, 6, 50);
     if (new Date(sIso).getTime() < nowMs) events.push({ ...base(), id: uid('demo-e-'), at: sIso, kind: 'sleep', title: 'Acordei', detail: r() < 0.7 ? 'Dormi bem' : 'Noite agitada' });
   }
@@ -114,6 +116,6 @@ export async function loadDemoData() {
     repo.activities.bulkAdd(acts), repo.moods.bulkAdd(moods), repo.dayEvents.bulkAdd(events),
     repo.medications.bulkAdd([med]), repo.medicationRecords.bulkAdd(medRecs),
     repo.appointments.bulkAdd([appt, appt2]), repo.exams.bulkAdd(exams), repo.examResults.bulkAdd(results),
-    repo.questions.bulkAdd(questions),
+    repo.questions.bulkAdd(questions), repo.weights.bulkAdd(weights),
   ]);
 }

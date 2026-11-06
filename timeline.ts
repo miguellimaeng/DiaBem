@@ -17,10 +17,10 @@ export interface TimelineItem {
 }
 
 export async function loadTimeline(from: Date, to: Date, unit: GlucoseUnit): Promise<TimelineItem[]> {
-  const [g, m, i, mr, a, mo, ev] = await Promise.all([
+  const [g, m, i, mr, a, mo, ev, w] = await Promise.all([
     repo.glucose.between(from, to), repo.meals.between(from, to), repo.insulin.between(from, to),
     repo.medicationRecords.between(from, to), repo.activities.between(from, to), repo.moods.between(from, to),
-    repo.dayEvents.between(from, to),
+    repo.dayEvents.between(from, to), repo.weights.between(from, to),
   ]);
   const items: TimelineItem[] = [
     ...g.map((r) => ({ id: r.id, kind: 'glucose' as const, at: r.at, title: 'Glicose', sub: `${formatGlucose(r.valueMgdl, unit)} ${unit} · ${CONTEXT_LABEL[r.context]}`, icon: KIND_META.glucose.icon, tone: KIND_META.glucose.tone, isDemo: r.isDemo })),
@@ -29,6 +29,7 @@ export async function loadTimeline(from: Date, to: Date, unit: GlucoseUnit): Pro
     ...mr.map((r) => ({ id: r.id, kind: 'medication' as const, at: r.at, title: r.medicationName, sub: MED_STATUS_META[r.status].label, icon: KIND_META.medication.icon, tone: KIND_META.medication.tone, isDemo: r.isDemo })),
     ...a.map((r) => ({ id: r.id, kind: 'activity' as const, at: r.at, title: r.activityType, sub: `${r.durationMin} min · ${INTENSITY_LABEL[r.intensity].toLowerCase()}`, icon: KIND_META.activity.icon, tone: KIND_META.activity.tone, isDemo: r.isDemo })),
     ...mo.map((r) => ({ id: r.id, kind: 'mood' as const, at: r.at, title: MOOD_META[r.mood].label, sub: r.symptoms.length ? r.symptoms.join(', ') : 'Como estou', icon: KIND_META.mood.icon, tone: KIND_META.mood.tone, isDemo: r.isDemo })),
+    ...w.map((r) => ({ id: r.id, kind: 'weight' as const, at: r.at, title: 'Peso', sub: `${String(r.weightKg).replace('.', ',')} kg${r.note ? ' · ' + r.note : ''}`, icon: KIND_META.weight.icon, tone: KIND_META.weight.tone, isDemo: r.isDemo })),
     ...ev.map((r) => ({ id: r.id, kind: 'event' as const, at: r.at, title: r.title, sub: r.detail ?? DAY_EVENT_META[r.kind].label, icon: DAY_EVENT_META[r.kind].icon, tone: DAY_EVENT_META[r.kind].tone, isDemo: r.isDemo })),
   ];
   return items.sort((x, y) => x.at.localeCompare(y.at));

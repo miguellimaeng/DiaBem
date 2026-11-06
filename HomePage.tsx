@@ -55,7 +55,7 @@ export function HomePage() {
               </div>
               <div className="hero-meta">Último registro • {fmtTime(last.at)} · {relativeFromNow(last.at)} {last.isDemo && <span className="demo-tag" style={{ marginLeft: 4 }}>Demo</span>}</div>
             </div>
-            <button className="hero-chip" style={{ color: '#fff', font: 'inherit', cursor: 'pointer' }}
+            <button className="hero-chip" style={{ font: 'inherit', cursor: 'pointer' }}
               onClick={() => navigate(state === 'unset' ? `${ROUTES.glucose}?faixa=1` : ROUTES.glucose)}>
               <b>{state === 'in' && <Icon name="checkCircle" size={14} />}{state === 'unset' ? 'Definir faixa' : RANGE_LABEL[state]}</b>
               <span>{state === 'unset' ? 'Você escolhe sua faixa' : 'configurada por você'}</span>

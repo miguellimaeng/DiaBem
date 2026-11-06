@@ -19,6 +19,7 @@ import { PLANNED_SOURCES } from '@/services/integrations/GlucoseSource';
 import { SHARE_CATEGORY_LABEL } from '@/services/sharing/caregiver';
 import { toLocalDateInput } from '@/utils/date';
 import type { DiabetesType, ExperienceMode, FontSize } from '@/types/models';
+import { ThemePicker } from '@/components/ThemePicker';
 
 export function ProfilePage() {
   const { settings, profile, updateSettings, saveProfile, toast } = useApp();
@@ -45,6 +46,11 @@ export function ProfilePage() {
           <SelectField label="Tipo de diabetes" value={profile?.diabetesType ?? 'unspecified'} onChange={(v: DiabetesType) => saveProfile({ diabetesType: v })}
             options={(Object.keys(DIABETES_TYPE_LABEL) as DiabetesType[]).map((k) => ({ value: k, label: DIABETES_TYPE_LABEL[k] }))} />
         </div>
+      </Card>
+
+      <Card title="Cores do app">
+        <ThemePicker value={settings.theme} onChange={(theme) => updateSettings({ theme })} />
+        <p className="xsmall muted mt-3">A capa e o ícone mudam junto com as cores. No celular, o ícone da tela de início fica com as cores escolhidas no momento em que o app foi instalado; para trocá-lo, remova o atalho e instale de novo.</p>
       </Card>
 
       <Card title="Experiência">

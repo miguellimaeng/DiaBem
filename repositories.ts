@@ -9,7 +9,7 @@ import { nowISO } from '@/utils/date';
 import type {
   ActivityRecord, AppSettings, Appointment, AchievementUnlock, BaseRecord, CaregiverPermission,
   ConsultationQuestion, DayEvent, EmergencyProfile, Exam, ExamResult, GlucoseRecord, InsulinPlanItem, InsulinRecord,
-  LearningProgress, MealRecord, Medication, MedicationRecord, MoodRecord, RecipeFavorite, TimedRecord, UserProfile,
+  LearningProgress, MealRecord, Medication, MedicationRecord, MoodRecord, RecipeFavorite, TimedRecord, UserProfile, WeightRecord,
 } from '@/types/models';
 
 /* ---------- Notificação de mudanças (para telas reativas) ---------- */
@@ -102,6 +102,7 @@ export const repo = {
   activities: timedRepo<ActivityRecord>('activities'),
   moods: timedRepo<MoodRecord>('moods'),
   dayEvents: timedRepo<DayEvent>('dayEvents'),
+  weights: timedRepo<WeightRecord>('weights'),
 
   medications: entityRepo<Medication>('medications'),
   exams: entityRepo<Exam>('exams'),
@@ -122,7 +123,7 @@ export const repo = {
 
 export const TIMED_REPOS = {
   glucose: repo.glucose, meals: repo.meals, insulin: repo.insulin, medicationRecords: repo.medicationRecords,
-  activities: repo.activities, moods: repo.moods, dayEvents: repo.dayEvents,
+  activities: repo.activities, moods: repo.moods, dayEvents: repo.dayEvents, weights: repo.weights,
 };
 
 /** Remove somente os dados de demonstração, preservando os reais. */

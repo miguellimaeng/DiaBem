@@ -5,11 +5,11 @@ import type { BaseRecord, GlucoseContext, GlucoseTargetRange } from '@/types/mod
 
 export async function buildReport(from: Date, to: Date, range: GlucoseTargetRange | null, includeDemo: boolean) {
   const keep = <T extends BaseRecord>(xs: T[]) => (includeDemo ? xs : xs.filter((x) => !x.isDemo));
-  const [glucose, meals, insulin, medRecs, meds, acts, moods, events, exams, results, questions, plan] = await Promise.all([
+  const [glucose, meals, insulin, medRecs, meds, acts, moods, events, exams, results, questions, plan, weights, lastWeight] = await Promise.all([
     repo.glucose.between(from, to).then(keep), repo.meals.between(from, to).then(keep), repo.insulin.between(from, to).then(keep),
     repo.medicationRecords.between(from, to).then(keep), repo.medications.all().then(keep), repo.activities.between(from, to).then(keep),
     repo.moods.between(from, to).then(keep), repo.dayEvents.between(from, to).then(keep), repo.exams.all().then(keep),
-    repo.examResults.all().then(keep), repo.questions.all().then(keep), repo.insulinPlan.all().then(keep),
+    repo.examResults.all().then(keep), repo.questions.all().then(keep), repo.insulinPlan.all().then(keep), repo.weights.between(from, to).then(keep), repo.weights.latest(1).then(keep),
   ]);
 
   const stats = computeStats(glucose, range);
@@ -28,7 +28,8 @@ export async function buildReport(from: Date, to: Date, range: GlucoseTargetRang
   moods.forEach((m) => moodCount.set(m.mood, (moodCount.get(m.mood) ?? 0) + 1));
 
   const latestResults = new Map<string, (typeof results)[number]>();
-  [...results].sort((a, b) => b.date.localeCompare(a.date)).forEach((r) => {
+  // mais recente primeiro; na mesma data, o valor conferido no laudo tem prioridade
+  [...results].sort((a, b) => b.date.localeCompare(a.date) || Number(b.verified !== false) - Number(a.verified !== false)).forEach((r) => {
     const k = r.indicator === 'other' ? `o:${r.customName}` : r.indicator;
     if (!latestResults.has(k)) latestResults.set(k, r);
   });
@@ -52,6 +53,7 @@ export async function buildReport(from: Date, to: Date, range: GlucoseTargetRang
     latestResults: [...latestResults.values()],
     notes, questions: questions.filter((q) => !q.done), hasDemo,
     plan: plan.filter((p) => p.active),
+    weights, lastWeight: weights[weights.length - 1] ?? lastWeight[0],
   };
 }
 

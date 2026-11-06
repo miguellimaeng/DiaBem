@@ -7,8 +7,12 @@ import { APP_CONFIG } from '@/config/app.config';
 import { DIABETES_TYPE_LABEL } from '@/config/categories';
 import { loadDemoData } from '@/database/demoSeed';
 import { nowISO } from '@/utils/date';
-import type { DiabetesType, ExperienceMode, FontSize } from '@/types/models';
+import type { DiabetesType, ExperienceMode, FontSize, ThemeName } from '@/types/models';
+import { ThemePicker } from '@/components/ThemePicker';
+import { DEFAULT_THEME } from '@/config/themes';
 import { ImportSheet } from './ImportSheet';
+import { CoverArt } from '@/components/Splash';
+import { repo } from '@/database/repositories';
 import type { SetupFile } from '@/services/importData';
 
 const MODES: { value: ExperienceMode; label: string; desc: string }[] = [
@@ -23,6 +27,9 @@ export function Onboarding() {
   const [name, setName] = useState('');
   const [type, setType] = useState<DiabetesType>('unspecified');
   const [managedBy, setManagedBy] = useState<'self' | 'caregiver'>('self');
+  const [birth, setBirth] = useState('');
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
   const [mode, setMode] = useState<ExperienceMode>('adult');
   const [c1, setC1] = useState(false);
   const [c2, setC2] = useState(false);
@@ -31,14 +38,55 @@ export function Onboarding() {
   const [importOpen, setImportOpen] = useState(false);
   const [imported, setImported] = useState<SetupFile['settings'] | null>(null);
   const [fontSize, setFontSize] = useState<FontSize>('md');
+  const [theme, setTheme] = useState<ThemeName>(DEFAULT_THEME);
+  useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
   // pré-visualiza o modo escolhido
   useEffect(() => { document.documentElement.dataset.mode = mode; }, [mode]);
 
   async function finish() {
     setBusy(true);
-    await saveProfile({ name: name.trim(), diabetesType: type, managedBy });
+    const h = Number(height.replace(',', '.')); const w = Number(weight.replace(',', '.'));
+    await saveProfile({ name: name.trim(), diabetesType: type, managedBy, birthDate: birth || undefined, heightCm: h >= 40 && h <= 250 ? Math.round(h) : undefined });
+    if (w >= 2 && w <= 400) await repo.weights.add({ weightKg: Math.round(w * 10) / 10, at: new Date().toISOString() });
     if (demo) await loadDemoData();
-    await updateSettings({ ...(imported ?? {}), mode, fontSize, consent: { localStorage: true, medicalDisclaimer: true, acceptedAt: nowISO(), version: 1 }, onboardingDone: true, demoLoaded: demo });
+    await updateSettings({ ...(imported ?? {}), mode, fontSize, theme, consent: { localStorage: true, medicalDisclaimer: true, acceptedAt: nowISO(), version: 1 }, onboardingDone: true, demoLoaded: demo });
+  }
+
+  // a capa do cadastro já faz o papel da abertura desta sessão
+  useEffect(() => { try { sessionStorage.setItem('diabem-splash', '1'); } catch { /* sem storage */ } }, []);
+
+  if (step === 0) {
+    return (
+      <>
+        <CoverArt theme={theme}>
+          <div className="cover-actions">
+            <button className="btn btn-white btn-block" onClick={() => setStep(1)}>Começar</button>
+            <button className="btn btn-glass btn-block" onClick={() => setImportOpen(true)}><Icon name="upload" size={18} /> Tenho um arquivo de configuração</button>
+            <p className="cover-note"><Icon name="lock" size={14} /> Sem cadastro. Seus dados ficam só neste aparelho.</p>
+          </div>
+        </CoverArt>
+      {importOpen && (
+        <ImportSheet onClose={() => setImportOpen(false)} onDone={(sum, raw) => {
+          const s = raw as SetupFile;
+          if (sum.kind === 'setup') {
+            if (s.profile?.name) setName(s.profile.name);
+            if (s.profile?.diabetesType) setType(s.profile.diabetesType);
+            if (s.profile?.managedBy) setManagedBy(s.profile.managedBy);
+            if (s.profile?.birthDate) setBirth(s.profile.birthDate);
+            if (s.profile?.heightCm) setHeight(String(s.profile.heightCm));
+            if (s.settings?.mode) setMode(s.settings.mode);
+            if (s.settings?.fontSize) setFontSize(s.settings.fontSize);
+            if (s.settings?.theme) setTheme(s.settings.theme);
+            setImported(s.settings ?? {});
+          } else {
+            setImported({});
+          }
+          setImportOpen(false);
+          setStep(1);
+        }} />
+      )}
+      </>
+    );
   }
 
   return (
@@ -62,6 +110,11 @@ export function Onboarding() {
           <p className="muted small">Tudo é opcional e pode ser alterado depois.</p>
           <TextField label="Como podemos te chamar?" value={name} onChange={setName} placeholder="Seu nome ou apelido" autoFocus />
           <SelectField label="Tipo de diabetes" value={type} onChange={setType} options={(Object.keys(DIABETES_TYPE_LABEL) as DiabetesType[]).map((k) => ({ value: k, label: DIABETES_TYPE_LABEL[k] }))} />
+          <TextField label="Data de nascimento" type="date" value={birth} onChange={setBirth} />
+          <div className="input-row">
+            <TextField label="Altura (cm)" value={height} onChange={(v) => setHeight(v.replace(/[^0-9.,]/g, ''))} inputMode="decimal" placeholder="Ex.: 160" />
+            <TextField label="Peso (kg)" value={weight} onChange={(v) => setWeight(v.replace(/[^0-9.,]/g, ''))} inputMode="decimal" placeholder="Ex.: 68,5" />
+          </div>
           <div className="field">
             <span className="field-label">Quem vai usar o app?</span>
             <Choices label="Quem usa" value={managedBy} onChange={setManagedBy} options={[{ value: 'self', label: 'Eu mesmo(a)' }, { value: 'caregiver', label: 'Sou responsável / cuidador' }]} />
@@ -70,7 +123,7 @@ export function Onboarding() {
       )}
       {step === 2 && (
         <div className="stack">
-          <h1>Como prefere usar?</h1>
+          <h1>Do seu jeito</h1>
           <p className="muted small">Muda o tamanho das letras, a linguagem e quantas opções aparecem. Dá para trocar a qualquer momento no Perfil.</p>
           {MODES.map((m) => (
             <button key={m.value} className="choice" aria-pressed={mode === m.value} onClick={() => setMode(m.value)} style={{ padding: 16 }}>
@@ -78,6 +131,8 @@ export function Onboarding() {
               <span><span className="strong" style={{ display: 'block', fontSize: 'var(--fs-md)' }}>{m.label}</span><span className="xsmall muted">{m.desc}</span></span>
             </button>
           ))}
+          <h3 className="mt-3">Escolha as cores</h3>
+          <ThemePicker value={theme} onChange={setTheme} />
         </div>
       )}
       {step === 3 && (
@@ -105,8 +160,11 @@ export function Onboarding() {
             if (s.profile?.name) setName(s.profile.name);
             if (s.profile?.diabetesType) setType(s.profile.diabetesType);
             if (s.profile?.managedBy) setManagedBy(s.profile.managedBy);
+            if (s.profile?.birthDate) setBirth(s.profile.birthDate);
+            if (s.profile?.heightCm) setHeight(String(s.profile.heightCm));
             if (s.settings?.mode) setMode(s.settings.mode);
             if (s.settings?.fontSize) setFontSize(s.settings.fontSize);
+            if (s.settings?.theme) setTheme(s.settings.theme);
             setImported(s.settings ?? {});
           } else {
             setImported({});

@@ -6,7 +6,7 @@
 export const APP_CONFIG = {
   name: 'DiaBem',
   tagline: 'Seu dia a dia com diabetes, organizado.',
-  version: '0.2.0',
+  version: '0.6.0',
   supportEmail: '',
   colors: {
     primary: '#3F6FE5',

@@ -1,0 +1,85 @@
+/* =========================================================
+   Temas de cores — escolhidos pela pessoa em Perfil.
+   Cada tema só redefine tokens; nenhum componente muda.
+   Regras de contraste: texto sobre cartões ≥ 4.5:1;
+   texto branco sobre o cartão principal ≥ 4.5:1 na cor
+   mais escura do degradê.
+   Para criar um tema novo: copie um bloco, troque as
+   cores e adicione o nome em src/config/themes.ts.
+   ========================================================= */
+
+/* ---------- Vibrantes: fundo em degradê + destaques em degradê ---------- */
+:root[data-theme='aurora'] {
+  --bg: #f1efff; --ink: #1e1b3a; --ink-2: #34305a; --muted: #5a577a; --line: #e4e1f7; --line-strong: #d0ccf0;
+  --primary: #4f46e5; --primary-strong: #4338ca; --primary-soft: #ecebff;
+  --hero-from: #4338ca; --hero-to: #0f766e; --glow: rgba(67, 56, 202, 0.42);
+  --green: #059669; --green-ink: #047857; --green-soft: #ddf7ec;
+  --teal: #0d9488; --teal-ink: #0f766e; --teal-soft: #d8f5f1;
+  --amber: #ea8a00; --amber-ink: #a15c00; --amber-soft: #fff0d6;
+  --rose: #e0457b; --rose-ink: #b42e5e; --rose-soft: #ffe4ee;
+  --violet: #8b5cf6; --violet-ink: #6d3fd9; --violet-soft: #f0e9ff;
+  --page-gradient: linear-gradient(160deg, #eeebff 0%, #f3f1ff 35%, #e6faf4 100%);
+}
+:root[data-theme='oceano'] {
+  --bg: #eaf5ff; --ink: #0f2233; --ink-2: #22394d; --muted: #4e6478; --line: #d9e9f5; --line-strong: #c3d9ea;
+  --primary: #1d5fe0; --primary-strong: #1d4ed8; --primary-soft: #e2edff;
+  --hero-from: #1d4ed8; --hero-to: #0e7490; --glow: rgba(29, 78, 216, 0.4);
+  --green: #0e9f6e; --green-ink: #047857; --green-soft: #dcf7ec;
+  --teal: #0891b2; --teal-ink: #0e7490; --teal-soft: #d7f2f8;
+  --amber: #f59e0b; --amber-ink: #a65f00; --amber-soft: #fff1d6;
+  --rose: #ec4899; --rose-ink: #be2c78; --rose-soft: #ffe4f1;
+  --violet: #7c5cfa; --violet-ink: #5e3fdb; --violet-soft: #eee9ff;
+  --page-gradient: linear-gradient(160deg, #e3f0ff 0%, #eef6ff 40%, #e2f8f5 100%);
+}
+:root[data-theme='por-do-sol'] {
+  --bg: #fff3ec; --ink: #2a1a22; --ink-2: #4a2f3a; --muted: #6e5560; --line: #f6e0da; --line-strong: #ecc9c0;
+  --primary: #d9366b; --primary-strong: #be185d; --primary-soft: #ffe6ef;
+  --hero-from: #c2410c; --hero-to: #be185d; --glow: rgba(190, 24, 93, 0.38);
+  --green: #16a34a; --green-ink: #15803d; --green-soft: #dff7e7;
+  --teal: #0e9f94; --teal-ink: #0f766e; --teal-soft: #d9f4f1;
+  --amber: #f08a00; --amber-ink: #a55a00; --amber-soft: #ffefd6;
+  --rose: #e11d74; --rose-ink: #b0145a; --rose-soft: #ffe3ef;
+  --violet: #7c3aed; --violet-ink: #6227d0; --violet-soft: #efe7ff;
+  --page-gradient: linear-gradient(160deg, #ffede2 0%, #fff5f0 40%, #fde9f2 100%);
+}
+:root[data-theme='aurora'], :root[data-theme='oceano'], :root[data-theme='por-do-sol'] {
+  --accent-grad: linear-gradient(135deg, var(--hero-from), var(--hero-to));
+  --accent-grad-h: linear-gradient(90deg, var(--hero-from), var(--hero-to));
+  --app-frame: none;
+}
+:root[data-theme='aurora'] body, :root[data-theme='oceano'] body, :root[data-theme='por-do-sol'] body {
+  background: var(--page-gradient); background-attachment: fixed;
+}
+:root[data-theme='aurora'] .app, :root[data-theme='oceano'] .app, :root[data-theme='por-do-sol'] .app { background: transparent; }
+:root[data-theme='aurora'] .topbar, :root[data-theme='oceano'] .topbar, :root[data-theme='por-do-sol'] .topbar { background: transparent; }
+:root[data-theme='aurora'] :is(.card, .stat, .quick-btn, .tl-card),
+:root[data-theme='oceano'] :is(.card, .stat, .quick-btn, .tl-card),
+:root[data-theme='por-do-sol'] :is(.card, .stat, .quick-btn, .tl-card) { background: rgba(255, 255, 255, 0.93); border-color: rgba(255, 255, 255, 0.9); }
+:root[data-theme='aurora'] .hero-chip, :root[data-theme='oceano'] .hero-chip, :root[data-theme='por-do-sol'] .hero-chip {
+  background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.35);
+}
+:root[data-theme='aurora'] .sheet, :root[data-theme='oceano'] .sheet, :root[data-theme='por-do-sol'] .sheet { background: var(--page-gradient); }
+
+/* ---------- Neutro claro: o mais legível (baixa visão) ---------- */
+:root[data-theme='neutro'] {
+  --bg: #f2f2f7; --ink: #1c1c1e; --ink-2: #3a3a3c; --muted: #636366; --line: #e3e3e8; --line-strong: #c7c7cc;
+  --primary: #0a66d8; --primary-strong: #0852b0; --primary-soft: #e8f1fd;
+  --green: #248a3d; --green-ink: #1e7a35; --green-soft: #e6f4ea; --teal: #0e7c86; --teal-ink: #0b6770; --teal-soft: #e3f3f4;
+  --amber: #c96a00; --amber-ink: #9a5200; --amber-soft: #fff1e0; --rose: #c43c5c; --rose-ink: #a3304c; --rose-soft: #fcebef;
+  --violet: #5e50c8; --violet-ink: #4c3fb0; --violet-soft: #efedfb;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --hero-bg: #ffffff; --glow: rgba(0, 0, 0, 0.08);
+  --page-gradient: #f2f2f7; --app-frame: none;
+}
+:root[data-theme='neutro'] body { background: #f2f2f7; }
+:root[data-theme='neutro'] .hero { color: var(--ink); border: 1px solid var(--line); }
+:root[data-theme='neutro'] :is(.hero-sub, .hero-meta) { color: var(--muted); opacity: 1; }
+:root[data-theme='neutro'] .hero-value small { color: var(--muted); }
+:root[data-theme='neutro'] .hero-chip { background: var(--green-soft); border-color: transparent; color: var(--green-ink); }
+:root[data-theme='neutro'] .hero .btn-on-hero { background: var(--primary); color: #fff; }
+
+/* ---------- Modo Fácil: contraste extra em qualquer tema ---------- */
+:root[data-mode='easy'][data-theme] {
+  --muted: #46505c;
+  --ink-2: var(--ink);
+}

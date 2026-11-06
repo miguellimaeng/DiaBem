@@ -9,7 +9,7 @@
 import type { ShareCategory } from '@/types/models';
 
 export const SHARE_CATEGORY_LABEL: Record<ShareCategory, string> = {
-  glucose: 'Glicose', meals: 'Refeições', insulin: 'Insulina', medications: 'Medicamentos',
+  glucose: 'Glicose', weight: 'Peso', meals: 'Refeições', insulin: 'Insulina', medications: 'Medicamentos',
   activity: 'Atividade física', mood: 'Como estou', exams: 'Exames', appointments: 'Consultas', emergency: 'Dados de emergência',
 };
 

@@ -7,15 +7,17 @@ import { Button, Card, Notice, Pills, Section, Stat, SubHead, Switch, TextField 
 import { GlucoseChart, DistributionBar } from '@/components/charts/GlucoseChart';
 import { QuestionsCard } from '../appointments/QuestionsCard';
 import { buildReport } from './reportData';
-import { addDays, endOfDay, fmtDateLong, fmtDateTime, parseLocalDate, startOfDay, toLocalDateInput } from '@/utils/date';
+import { addDays, endOfDay, fmtDateLong, fmtDateShort, fmtDateTime, parseLocalDate, startOfDay, toLocalDateInput } from '@/utils/date';
 import { CONTEXT_LABEL, formatGlucose, TREND_LABEL } from '@/utils/glucose';
 import { INDICATOR_META, INSULIN_KIND_LABEL, INSULIN_MOMENT_LABEL, MEAL_LABEL, MOOD_META } from '@/config/categories';
 import { HistoryNotesCard } from '../health/HistoryNotesCard';
 import { sortPlan } from '../insulin/InsulinPlan';
 import { download, toCSV } from '@/services/export';
+import { buildReportPdf } from '@/services/reportPdf';
 import { unlock } from '../education/achievements';
 import { APP_CONFIG } from '@/config/app.config';
 import type { MoodLevel } from '@/types/models';
+import { ageFrom, bmi, fmtKg, fmtNum1 } from '@/utils/body';
 
 type Period = '7' | '30' | '90' | 'custom';
 
@@ -31,9 +33,35 @@ export function PreparePage() {
     ? { from: startOfDay(parseLocalDate(cFrom)), to: endOfDay(parseLocalDate(cTo)) }
     : { from: addDays(startOfDay(), -(Number(period) - 1)), to: endOfDay() }, [period, cFrom, cTo]);
 
+  const age = ageFrom(profile);
   const { data: r } = useData(() => buildReport(from, to, settings.targetRange, includeDemo), [from.getTime(), to.getTime(), includeDemo, settings.targetRange?.updatedAt]);
 
   useEffect(() => { unlock('report'); }, []);
+  const imcNow = r?.lastWeight ? bmi(r.lastWeight.weightKg, profile?.heightCm) : null;
+
+  const [pdfBusy, setPdfBusy] = useState(false);
+  const canShareFiles = typeof navigator !== 'undefined' && !!navigator.canShare?.({ files: [new File([''], 'x.pdf', { type: 'application/pdf' })] });
+
+  async function makePdf(mode: 'download' | 'share') {
+    if (!r) return;
+    setPdfBusy(true);
+    try {
+      const blob = await buildReportPdf(r, { profile, unit, range: settings.targetRange });
+      const nm = (profile?.name || 'diabem').normalize('NFD').replace(/[^\w]+/g, '-').replace(/-+$/, '').toLowerCase();
+      const filename = `resumo-consulta-${nm}-${toLocalDateInput(to)}.pdf`;
+      if (mode === 'share') {
+        const file = new File([blob], filename, { type: 'application/pdf' });
+        try { await navigator.share({ files: [file], title: 'Resumo para consulta' }); }
+        catch (e) { if ((e as Error).name !== 'AbortError') download(blob, filename); }
+      } else {
+        download(blob, filename);
+        toast('PDF gerado');
+      }
+    } catch (e) {
+      console.error(e);
+      toast('Não foi possível gerar o PDF');
+    } finally { setPdfBusy(false); }
+  }
 
   function exportCSV() {
     if (!r) return;
@@ -80,6 +108,14 @@ export function PreparePage() {
             </div>
             {r.hasDemo && <div className="mt-3"><Notice tone="warm">Este resumo contém dados de demonstração, que não são registros reais.</Notice></div>}
           </Card>
+
+          <Section title="Dados gerais" />
+          <div className="grid-3">
+            <Stat value={age ?? '—'} unit={age != null ? 'anos' : undefined} label="Idade" />
+            <Stat value={profile?.heightCm ?? '—'} unit={profile?.heightCm ? 'cm' : undefined} label="Altura" />
+            <Stat value={r.lastWeight ? fmtKg(r.lastWeight.weightKg) : '—'} unit={r.lastWeight ? 'kg' : undefined} label={r.lastWeight ? `Peso (${fmtDateShort(r.lastWeight.at)})` : 'Peso'} />
+          </div>
+          {r.weights.length >= 2 && <p className="small mt-2">Peso no período: {fmtKg(r.weights[0].weightKg)} kg → {fmtKg(r.weights[r.weights.length - 1].weightKg)} kg ({r.weights.length} registros){imcNow ? ` · IMC atual ${fmtNum1(imcNow)}` : ''}.</p>}
 
           <Section title="Glicose" />
           <Card>
@@ -187,9 +223,13 @@ export function PreparePage() {
 
           <p className="disclaimer">{APP_CONFIG.medicalDisclaimer} Relatório gerado em {fmtDateTime(new Date().toISOString())}.</p>
 
-          <div className="grid-2 no-print mt-3">
-            <Button icon="printer" onClick={() => window.print()}>Imprimir / PDF</Button>
-            <Button variant="soft" icon="download" onClick={exportCSV}>Exportar CSV</Button>
+          <div className="no-print mt-3 stack-sm">
+            <Button block icon="fileText" disabled={pdfBusy} onClick={() => makePdf('download')}>{pdfBusy ? 'Gerando PDF…' : 'Baixar PDF para o médico'}</Button>
+            {canShareFiles && <Button block variant="soft" icon="share" disabled={pdfBusy} onClick={() => makePdf('share')}>Enviar PDF (WhatsApp, e-mail…)</Button>}
+            <div className="grid-2">
+              <Button variant="ghost" icon="printer" onClick={() => window.print()}>Imprimir</Button>
+              <Button variant="ghost" icon="download" onClick={exportCSV}>Planilha CSV</Button>
+            </div>
           </div>
         </>
       )}

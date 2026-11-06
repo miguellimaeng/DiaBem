@@ -9,6 +9,7 @@ export const KIND_META: Record<QuickKind, { label: string; labelChild?: string; 
   medication: { label: 'Medicamento', labelChild: 'Remédio', icon: 'pill', tone: 'green' },
   activity:   { label: 'Atividade', labelChild: 'Movimento', icon: 'footprints', tone: 'teal' },
   mood:       { label: 'Como estou', labelChild: 'Como me sinto', icon: 'smile', tone: 'rose' },
+  weight:     { label: 'Peso', icon: 'scale', tone: 'teal' },
   event:      { label: 'Outro evento', labelChild: 'Outra coisa', icon: 'note', tone: 'gray' },
 };
 

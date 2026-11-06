@@ -11,8 +11,9 @@ import { MedicationEditor, MedicationIntakeForm } from '@/features/medications/M
 import { ActivityForm } from '@/features/activity/ActivityForm';
 import { MoodForm } from '@/features/mood/MoodForm';
 import { EventForm } from '@/features/day/EventForm';
+import { WeightForm } from '@/features/body/WeightForm';
 
-const PICKER: QuickKind[] = ['glucose', 'meal', 'insulin', 'medication', 'activity', 'mood', 'event'];
+const PICKER: QuickKind[] = ['glucose', 'meal', 'insulin', 'medication', 'activity', 'mood', 'weight', 'event'];
 
 export function QuickSheets() {
   const { quick, closeQuick, pickerOpen, setPickerOpen, openQuick, t, mode } = useApp();
@@ -47,6 +48,7 @@ function renderForm(kind: QuickKind, editId: string | undefined, preset: Record<
     case 'medication': return preset?.editor ? <MedicationEditor {...props} /> : <MedicationIntakeForm {...props} />;
     case 'activity': return <ActivityForm {...props} />;
     case 'mood': return <MoodForm {...props} />;
+    case 'weight': return <WeightForm {...props} />;
     case 'event': return <EventForm {...props} />;
   }
 }

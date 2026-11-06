@@ -78,6 +78,9 @@ const P = {
   type: <path d="M4 7V4h16v3M9 20h6M12 4v16" />,
   eye: <><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" /><circle cx="12" cy="12" r="3" /></>,
   menu: <path d="M4 6h16M4 12h16M4 18h16" />,
+  scale: <><path d="M16 16.5l3-8 3 8c-.9.7-1.9 1-3 1s-2.1-.3-3-1Z" /><path d="M2 16.5l3-8 3 8c-.9.7-1.9 1-3 1s-2.1-.3-3-1Z" /><path d="M7 21h10M12 3v18M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2" /></>,
+  ruler: <><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z" /><path d="m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2" /></>,
+  scan: <><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" /><path d="M7 12h10M7 8h10M7 16h6" /></>,
 } satisfies Record<string, ReactNode>;
 
 export type IconName = keyof typeof P;

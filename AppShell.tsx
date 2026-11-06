@@ -4,6 +4,7 @@ import { navigate, useRoute, ROUTES } from '@/app/router';
 import { Icon, type IconName } from '../Icon';
 import { QuickSheets } from '@/app/QuickSheets';
 import { APP_CONFIG } from '@/config/app.config';
+import { themeIcon } from '@/config/themes';
 
 interface NavItem { path: string; label: string; icon: IconName; }
 
@@ -17,7 +18,7 @@ const NAV: NavItem[] = [
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { mode, setPickerOpen, t, profile } = useApp();
+  const { mode, setPickerOpen, t, profile, settings } = useApp();
   const route = useRoute();
   // Modo Fácil: navegação simplificada (Meu Dia fica acessível pelo Início)
   const nav = mode === 'easy' ? NAV.filter((n) => n.path !== ROUTES.day) : NAV;
@@ -28,7 +29,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <a href="#conteudo" className="skip-link" onClick={(e) => { e.preventDefault(); document.getElementById('conteudo')?.focus(); }}>Ir para o conteúdo</a>
       <header className="topbar">
         <button className="brand" style={{ border: 0, background: 'none', padding: 0 }} onClick={() => navigate('/')} aria-label={`${APP_CONFIG.name} — início`}>
-          <span className="brand-mark"><Icon name="drop" size={16} strokeWidth={2.4} /></span>
+          <img className="brand-mark" src={themeIcon(settings.theme).svg} alt="" width={28} height={28} />
           {APP_CONFIG.name}
         </button>
         <div className="topbar-actions">

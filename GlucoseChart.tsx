@@ -88,11 +88,11 @@ export function GlucoseChart({ records, range, unit, from, to, height = 190 }: P
             {spanDays <= 1.1 ? fmtTime(d.toISOString()) : fmtDateShort(d)}
           </text>
         ))}
-        {showLine && pts.length > 1 && <path d={path} fill="none" stroke="#3f6fe5" strokeWidth="2.4" strokeLinejoin="round" strokeLinecap="round" opacity=".85" />}
+        {showLine && pts.length > 1 && <path d={path} fill="none" style={{ stroke: 'var(--primary)' }} strokeWidth="2.4" strokeLinejoin="round" strokeLinecap="round" opacity=".85" />}
         {pts.map((p, i) => {
           const st = rangeState(p.valueMgdl, range);
-          const fill = st === 'unset' || st === 'in' ? '#3f6fe5' : '#e5a24b';
-          return <circle key={p.id} cx={x(p.at)} cy={y(p.valueMgdl)} r={hover === i ? 5.5 : pts.length > 80 ? 2.2 : 3.4} fill={fill} stroke="#fff" strokeWidth={hover === i ? 2 : 1} />;
+          const fill = st === 'unset' || st === 'in' ? 'var(--primary)' : 'var(--amber)';
+          return <circle key={p.id} cx={x(p.at)} cy={y(p.valueMgdl)} r={hover === i ? 5.5 : pts.length > 80 ? 2.2 : 3.4} style={{ fill }} stroke="#fff" strokeWidth={hover === i ? 2 : 1} />;
         })}
         {hp && <line x1={x(hp.at)} x2={x(hp.at)} y1={PAD.t} y2={H - PAD.b} stroke="#c7d2e3" strokeDasharray="3 3" />}
       </svg>

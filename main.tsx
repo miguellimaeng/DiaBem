@@ -5,6 +5,7 @@ import { registerServiceWorker } from './services/pwa';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/components.css';
+import './styles/themes.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

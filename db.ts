@@ -6,10 +6,10 @@
    ========================================================= */
 
 export const DB_NAME = 'diabem';
-export const DB_VERSION = 2;
+export const DB_VERSION = 3;
 
 /** Stores de registros com data/hora (índice `at`). */
-export const TIMED_STORES = ['glucose', 'meals', 'insulin', 'medicationRecords', 'activities', 'moods', 'dayEvents'] as const;
+export const TIMED_STORES = ['glucose', 'meals', 'insulin', 'medicationRecords', 'activities', 'moods', 'dayEvents', 'weights'] as const;
 /** Stores de cadastros. */
 export const ENTITY_STORES = ['medications', 'exams', 'examResults', 'appointments', 'questions', 'caregivers', 'insulinPlan'] as const;
 /** Stores de chave fixa ou simples. */
@@ -40,7 +40,13 @@ function upgrade(db: IDBDatabase, oldVersion: number) {
     // v2: esquema de insulina transcrito da receita
     db.createObjectStore('insulinPlan', { keyPath: 'id' }).createIndex('syncStatus', 'syncStatus');
   }
-  // if (oldVersion < 3) { ...próximas migrações... }
+  if (oldVersion < 3 && !db.objectStoreNames.contains('weights')) {
+    // v3: registros de peso
+    const s = db.createObjectStore('weights', { keyPath: 'id' });
+    s.createIndex('at', 'at');
+    s.createIndex('syncStatus', 'syncStatus');
+  }
+  // if (oldVersion < 4) { ...próximas migrações... }
 }
 
 export function openDB(): Promise<IDBDatabase> {

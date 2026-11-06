@@ -3,11 +3,13 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import { repo, onDataChange } from '@/database/repositories';
 import type { AppSettings, ExperienceMode, QuickKind, UserProfile } from '@/types/models';
 import { nowISO } from '@/utils/date';
+import { DEFAULT_THEME, applyThemeIcons, themeMeta } from '@/config/themes';
 
 export const DEFAULT_SETTINGS: AppSettings = {
   id: 'settings',
   mode: 'adult',
   fontSize: 'md',
+  theme: DEFAULT_THEME,
   reduceMotion: false,
   glucoseUnit: 'mg/dL',
   targetRange: null, // sem faixa universal: o usuário/profissional define
@@ -63,7 +65,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     root.dataset.mode = settings.mode;
     root.dataset.font = settings.fontSize;
     root.dataset.motion = settings.reduceMotion ? 'reduce' : 'auto';
-  }, [settings.mode, settings.fontSize, settings.reduceMotion]);
+    root.dataset.theme = settings.theme ?? DEFAULT_THEME;
+    try { localStorage.setItem('diabem-theme', root.dataset.theme); } catch { /* sem storage */ }
+    applyThemeIcons(settings.theme ?? DEFAULT_THEME);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeMeta(settings.theme ?? DEFAULT_THEME).themeColor);
+  }, [settings.mode, settings.fontSize, settings.reduceMotion, settings.theme]);
 
   useEffect(() => {
     if (!toastMsg) return;
