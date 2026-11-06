@@ -1,0 +1,109 @@
+/* =========================================================
+   DiaBem — Design tokens
+   Paleta, tipografia, espaçamento, raios e sombras.
+   Os modos (adulto / criança / fácil) e a escala de fonte
+   apenas reescrevem tokens — os componentes não mudam.
+   ========================================================= */
+:root {
+  /* Superfícies */
+  --bg: #f6f8fb;
+  --surface: #ffffff;
+  --surface-2: #fbfcfe;
+  --line: #e5eaf0;
+  --line-strong: #d3dbe5;
+
+  /* Texto */
+  --ink: #1f2f3d;
+  --ink-2: #405066;
+  --muted: #718096;
+
+  /* Marca e categorias */
+  --primary: #3f6fe5;
+  --primary-strong: #2f5bcc;
+  --primary-soft: #eef3ff;
+  --green: #4ca873;
+  --green-ink: #2f7d52;
+  --green-soft: #edf8f1;
+  --teal: #3aa8a0;
+  --teal-ink: #23807a;
+  --teal-soft: #eaf7f5;
+  --amber: #e5a24b;
+  --amber-ink: #a76a1c;
+  --amber-soft: #fff5e8;
+  --rose: #d9788e;
+  --rose-ink: #b34d66;
+  --rose-soft: #fff0f4;
+  --violet: #7565d4;
+  --violet-ink: #5747b8;
+  --violet-soft: #f1efff;
+
+  /* Estados neutros (nunca "vermelho de alarme" para glicose) */
+  --out-range: #e5a24b;
+  --in-range: #4ca873;
+
+  /* Tipografia */
+  --font-title: 'Nunito Sans', 'Manrope', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-scale: 1;
+  --fs-xs: calc(11px * var(--font-scale));
+  --fs-sm: calc(12.5px * var(--font-scale));
+  --fs-md: calc(14px * var(--font-scale));
+  --fs-lg: calc(16px * var(--font-scale));
+  --fs-xl: calc(19px * var(--font-scale));
+  --fs-2xl: calc(24px * var(--font-scale));
+  --fs-hero: calc(40px * var(--font-scale));
+
+  /* Espaçamento, raio, sombra */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+  --r-xl: 22px;
+  --shadow-sm: 0 1px 2px rgba(31, 47, 61, 0.04);
+  --shadow: 0 8px 22px rgba(36, 55, 82, 0.06);
+  --shadow-lg: 0 18px 40px rgba(36, 55, 82, 0.14);
+
+  /* Toque e layout */
+  --tap: 44px;
+  --quick-cols: 3;
+  --nav-h: 64px;
+  --content-max: 560px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 180ms;
+}
+
+/* ---------- Modo Criança: mesmo app, linguagem e tons mais amigáveis ---------- */
+:root[data-mode='child'] {
+  --r-lg: 20px;
+  --r-xl: 26px;
+  --hero-from: #6e63d9;
+  --hero-to: #6f93ea;
+}
+
+/* ---------- Modo Fácil: maior, mais contraste, menos colunas ---------- */
+:root[data-mode='easy'] {
+  --font-scale: 1.22;
+  --muted: #55657a;
+  --ink-2: #2b3b4c;
+  --line: #d6dee8;
+  --tap: 56px;
+  --quick-cols: 2;
+  --nav-h: 76px;
+}
+
+/* ---------- Escala de fonte escolhida pelo usuário ---------- */
+:root[data-font='lg'] { --font-scale: 1.12; }
+:root[data-font='xl'] { --font-scale: 1.25; }
+:root[data-mode='easy'][data-font='lg'] { --font-scale: 1.32; }
+:root[data-mode='easy'][data-font='xl'] { --font-scale: 1.45; }
+
+/* ---------- Redução de movimento ---------- */
+:root[data-motion='reduce'] { --dur: 0ms; }
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur: 0ms; }
+}
