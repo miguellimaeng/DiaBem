@@ -5,7 +5,7 @@
  *  - Nenhum dado de saúde passa por aqui: os registros ficam no IndexedDB do aparelho.
  * Para forçar atualização em todos os aparelhos, altere CACHE_VERSION.
  */
-const CACHE_VERSION = 'diabem-v2';
+const CACHE_VERSION = 'diabem-v6';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon.svg', './icons/icon-192.png'];
 
 self.addEventListener('install', (event) => {

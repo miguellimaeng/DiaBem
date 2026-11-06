@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR" data-mode="adult">
+<html lang="pt-BR" data-mode="adult" data-theme="oceano">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -10,15 +10,32 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="DiaBem" />
     <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
-    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="./icons/themes/oceano.svg" />
+    <link rel="apple-touch-icon" href="./icons/themes/oceano-apple-180.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito+Sans:opsz,wght@6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet" />
     <title>DiaBem</title>
   </head>
   <body>
-    <div id="root"></div>
+    <script>
+      // Aplica o tema salvo antes de desenhar (capa, ícone e manifesto já nas cores certas)
+      (function(){var t='oceano';try{t=localStorage.getItem('diabem-theme')||t}catch(e){}
+        var c={oceano:['#1D4ED8','#0E7490'],aurora:['#4338CA','#0F766E'],'por-do-sol':['#C2410C','#BE185D'],neutro:['#2563EB','#0E8A9A'],classico:['#3F6FE5','#6890EA']}[t];
+        if(!c){t='oceano';c=['#1D4ED8','#0E7490']}
+        document.documentElement.dataset.theme=t;
+        window.__dbTheme={t:t,c:c};
+        var q=function(s,h){var l=document.querySelector(s);if(l)l.setAttribute('href',h)};
+        q('link[rel="manifest"]','./manifest-'+t+'.webmanifest');q('link[rel="apple-touch-icon"]','./icons/themes/'+t+'-apple-180.png');q('link[rel="icon"]','./icons/themes/'+t+'.svg');})();
+    </script>
+    <div id="root">
+      <!-- Capa exibida enquanto o app carrega (substituída pelo React) -->
+      <div id="preload-cover" style="position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:#fff;font-family:system-ui,sans-serif;background:linear-gradient(155deg,#1D4ED8,#0E7490)">
+        <img id="preload-icon" src="./icons/themes/oceano.svg" alt="" width="120" height="120" style="border-radius:28px;box-shadow:0 24px 50px -12px rgba(0,0,0,.45)" />
+        <div style="font-size:40px;font-weight:800;letter-spacing:-.03em">DiaBem</div>
+      </div>
+      <script>(function(){var d=window.__dbTheme;if(!d)return;document.getElementById('preload-cover').style.background='radial-gradient(120% 70% at 15% 0%,rgba(255,255,255,.28),transparent 60%),linear-gradient(155deg,'+d.c[0]+','+d.c[1]+')';document.getElementById('preload-icon').src='./icons/themes/'+d.t+'.svg';})();</script>
+    </div>
     <noscript>O DiaBem precisa de JavaScript para funcionar.</noscript>
     <link rel="stylesheet" href="./app.css" /><script type="module" src="./app.js"></script>
   </body>
