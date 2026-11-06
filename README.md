@@ -74,6 +74,11 @@ Para testar no celular na mesma rede: `npm run dev -- --host` e abra o IP mostra
 
 O build é um site estático em `dist/`. O roteamento usa hash (`/#/glicose`), então **não precisa configurar rewrites** em nenhum provedor.
 
+**GitHub Pages** — o GitHub mostra o código, não roda o app sozinho. O arquivo `.github/workflows/deploy.yml` compila e publica automaticamente:
+1. Envie o projeto para um repositório (com a pasta `.github`, que fica oculta em alguns sistemas).
+2. Em **Settings → Pages → Build and deployment → Source**, escolha **GitHub Actions**.
+3. Faça um push na branch `main` (ou rode o workflow em **Actions**). Em ~2 minutos o app fica em `https://SEU-USUARIO.github.io/NOME-DO-REPOSITORIO/`.
+
 **Vercel** — importe o repositório; `vercel.json` já define `npm run build` e a pasta `dist`.
 
 **Netlify** — importe o repositório; `netlify.toml` já está configurado. Ou arraste a pasta `dist/` em app.netlify.com/drop.
